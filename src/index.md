@@ -1,12 +1,11 @@
 <div style="text-align: center;">
 Warriors 2015-2016 Regular Season Shot Chart<br>
-Highlight an Area to see Make Percentages in that Region
+Highlight an Area to see Make Percentages in that Region<br>
+Source/Write Up: https://github.com/Smpramuk/CSC477_Asgn5<br> 
 </div>
 
 ```js
 const shotsData = await FileAttachment("warriors_2016_shots.json").json();
-console.log("Data for all of the 7159 2015-2016 season shots below:");
-console.log(shotsData);
 
 // Court dimensions in inches
 const courtWidth = 50 * 12; // 600 inches
@@ -19,15 +18,15 @@ const baselineOffset = -48; // baseline is 4 ft behind hoop
 const yMin = baselineOffset; // baseline
 const yMax = halfCourtLength; // midcourt
 
-// Define chart dimensions and scales
+// Chart Dimensions
 const width = 700;
 const height = 650;
 
 const x = d3.scaleLinear().domain([xMin, xMax]).range([0, width]);
 
-const y = d3.scaleLinear().domain([yMin, yMax]).range([height, 0]); // flip y so hoop is at bottom
+const y = d3.scaleLinear().domain([yMin, yMax]).range([height, 0]); // flip y so hoop is at the bottom
 
-// Draw court + shots
+// COURT
 const svg = d3
   .create("svg")
   .attr("width", width)
@@ -39,7 +38,7 @@ const svg = d3
 // ----- Backboard -----
 const backboardY = -12;
 
-// ----- Support arms (connecting hoop to backboard) -----
+// ----- Support arms (connecting hoop to backboard), ends up overlayed by shots
 svg
   .append("line")
   .attr("x1", x(-4)) // slightly left of hoop
@@ -57,6 +56,8 @@ svg
   .attr("y2", y(backboardY))
   .attr("stroke", "gray")
   .attr("stroke-width", 2);
+
+// Sidelines, baseline
 svg
   .append("line")
   .attr("x1", x(-300))
@@ -115,7 +116,7 @@ svg
   .attr("stroke-width", 2)
   .attr("fill", "none");
 
-// Add Warriors logo inside the circle
+//  Warriors logo inside the circle
 svg
   .append("image")
   .attr(
@@ -170,6 +171,7 @@ svg
   .attr("stroke", "black")
   .attr("stroke-width", 3);
 
+// Free throw circle
 // Top half (solid)
 svg
   .append("path")
@@ -217,6 +219,8 @@ svg
 
 const restrictedRadius = 48; // 4 ft
 
+//Restricted circle
+
 svg
   .append("path")
   .attr(
@@ -237,12 +241,6 @@ const threePtRadius = 285; // 285 inches
 const threePtCornerX = 220; // 22 ft from 0
 const threePtCornerY = 14 * 12 - 48;
 const hoopY = -baselineOffset; // 48 inches above baseline
-// const threePtCornerY = Math.sqrt(threePtRadius ** 2 - threePtCornerX ** 2); // distance from hoop
-
-const cornerYRelativeToHoop = threePtCornerY - hoopY; // This is the key!
-
-// Calculate the angle using atan2 (better than acos for this)
-const threePtAngle = Math.atan2(cornerYRelativeToHoop, threePtCornerX);
 
 // Left corner straight line
 svg
@@ -266,6 +264,7 @@ svg
   .attr("stroke-linecap", "round")
   .attr("stroke-width", 3);
 
+//Top of key three point arc
 svg
   .append("path")
   .attr(
@@ -274,7 +273,7 @@ svg
       .arc()
       .innerRadius(threePtRadius)
       .outerRadius(threePtRadius)
-      .startAngle(-1.12) // negative for left side
+      .startAngle(-1.121) // negative for left side, angles calculated statically according to the visualization, issues with dynamic calculation
       .endAngle(1.121) // positive for right side
   )
   .attr("transform", `translate(${x(0)},${y(0)})`)
@@ -282,20 +281,21 @@ svg
   .attr("stroke-width", 3)
   .attr("fill", "none");
 
+//Shots
 svg
   .append("g")
   .selectAll("circle")
   .data(shotsData)
   .join("circle")
-  .attr("class", "shot") //class for selection via brush
+  .attr("class", "shot") //class for selection via brush if want to highlight selected points
   .attr("cx", (d) => x(d.LOC_X))
   .attr("cy", (d) => y(d.LOC_Y * 1.13))
-  .attr("r", 3) // radius in pixels
+  .attr("r", 3)
   .attr("fill", (d) => (d.SHOT_MADE_FLAG ? "green" : "red"))
   .attr("opacity", 0.6);
 
 // Add brush behavior
-// Create a div for the popup (initially hidden)
+// Div for the popup, hidden
 const popup = d3
   .select("body")
   .append("div")
@@ -317,7 +317,7 @@ const brush = d3
     [width, height],
   ])
   .on("start brush", () => {
-    // Hide popup immediately whenever brush starts or is being moved
+    // Hide popup whenever brush starts or is being moved
     popup.transition().duration(100).style("opacity", 0);
   })
   .on("end", (event) => {
