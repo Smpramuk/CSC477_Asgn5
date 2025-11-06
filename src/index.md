@@ -1,7 +1,6 @@
 <div style="text-align: center;">
 Warriors 2015-2016 Regular Season Shot Chart<br>
 Highlight an Area to see Make Percentages in that Region<br>
-Source/Write Up: https://github.com/Smpramuk/CSC477_Asgn5<br> 
 </div>
 
 ```js
