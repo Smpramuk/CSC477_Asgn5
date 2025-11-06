@@ -1,0 +1,12 @@
+Write Up:
+
+I choose to represent the NBA shot data as overlayed circles on a chart shaped as an NBA court. I was heavily inspired by previous works that I had seen online where this same technique was used. I did iterate on the size of the circles used to represent each shot and landed on a radius of 3 pixels. I decided to color the made shots green and the missed shots red as this is the idiomatically common coloring, and I colored the court biege similar to the color of a real NBA court. The layout of the court itself is predefined, but I did choose to layer the shots on top of all court elements. This led to the obfuscation of the hoop itself, but the backboard and restricted circle nearby give the viewer a good idea of the location of the hoop. I decided to support brushing, i.e. selecting a region of the court, as my method of interaction. This allows the viewer to compare how well the Warriors shot in different regions of the court, and I thought it would be very interesting to be able to see these differences. I considered allowing the user to be able to select points and then display more information about the point such as the shooter, the game, final score of the game, etc.. 
+
+Data Source: nba_api (https://github.com/swar/nba_api/blob/master/docs/nba_api/stats/endpoints/shotchartdetail.md)
+
+Inspirations: 
+[Peter Beshai Buckets](https://buckets.peterbeshai.com/app/)  
+[NBA Visuals Shotmaps](https://nbavisuals.com/shotmap)  
+[Todd W. Schneider Ballr Shot Charts](https://toddwschneider.com/posts/ballr-interactive-nba-shot-charts-with-r-and-shiny/)
+
+Development: I spent roughly 10 hours developing this visualization. For me, the most difficult part was setting up the court itself. I ran into many problems with scaling and positioning of certain elements. Further, I had never done a project in D3 before so there was lots of time spent learning the tools. I found the actual brushing, i.e. interataction, to be more straightforward than the creation of the court and plotting of the shot data.
